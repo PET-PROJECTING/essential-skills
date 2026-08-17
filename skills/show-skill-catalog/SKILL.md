@@ -19,6 +19,7 @@ List the skills from **this pack** and, if the user says what they are trying to
 | `/write-handoff` | Compact this conversation so the next agent can continue |
 | `/review-code` | Two-axis review (standards + spec) since a fixed point |
 | `/develop-with-tdd` | Tests first, watch them fail, then write the code |
+| `/feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 frontend architecture |
 | `/use-hybrid-folder-structure` | Hybrid frontend layout: responsibility first, feature second |
 
 Present this as a readable list for a human (the table is the source of truth). One line per skill is enough unless they ask for more.
@@ -33,9 +34,12 @@ If the user describes a current task, recommend from this pack only:
 - **Writing or refactoring React / Next.js for performance** → `/apply-best-practices`
 - **Review a branch, PR, or work since a commit** → `/review-code`
 - **Commit the current work** → `/create-commit`
+- **Organize a frontend with FSD layers and slices** → `/feature-sliced-design`
 - **Reorganize src/ by file kind and feature** → `/use-hybrid-folder-structure`
 - **Hand this session to another agent** → `/write-handoff`
 - **Need a skill that is not in this pack** → `/find-skills`
+
+`/feature-sliced-design` and `/use-hybrid-folder-structure` are different frontend layouts. If the user names FSD, layers, or slices, use FSD. If they name hybrid, responsibility-first, or file-kind folders, use hybrid. If they only say "reorganize src/", ask which layout they want.
 
 If more than one fits, list them in the order the human should run them (for example grill, then TDD, then commit).
 

@@ -23,6 +23,7 @@ After installing, restart the agent session so it picks up the new skills.
 | `apply-best-practices` | React and Next.js performance guidelines from Vercel Engineering |
 | `create-commit` | Conventional commit messages, staging, and `/commit` workflows |
 | `develop-with-tdd` | Write the failing test first, then the implementation |
+| `feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 frontend architecture from [fsd.how](https://fsd.how) |
 | `find-skills` | Discover and install skills from the open agent skills ecosystem |
 | `grill-me` | A pointed interview to sharpen a plan or design |
 | `review-code` | Two-axis review of changes against repo standards and the originating spec |
