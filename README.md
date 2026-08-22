@@ -28,7 +28,7 @@ After installing, restart the agent session so it picks up the new skills.
 | `feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 frontend architecture from [fsd.how](https://fsd.how) |
 | `find-skills` | Discover and install skills from the open agent skills ecosystem |
 | `fix-lint` | Fix Biome or ESLint issues on named or changed files |
-| `grill-me` | A pointed interview to sharpen a plan or design |
+| `grill-me` | Interview before any feature, fix, or adjustment; skip questions-only |
 | `review-code` | Two-axis review of changes against repo standards and the originating spec |
 | `show-skill-catalog` | List the skills in this pack and recommend which one to use |
 | `use-hybrid-folder-structure` | Refactor a frontend onto a hybrid (responsibility + feature) folder layout |
