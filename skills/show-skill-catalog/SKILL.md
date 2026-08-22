@@ -16,6 +16,12 @@ List the skills from **this pack** and, if the user says what they are trying to
 | `/grill-me` | Relentless interview to sharpen a plan or design |
 | `/create-commit` | Conventional commit from the diff, with intelligent staging |
 | `/apply-best-practices` | React and Next.js performance rules from Vercel |
+| `/apply-prettier` | Format files with the project's Prettier |
+| `/fix-lint` | Fix Biome or ESLint issues |
+| `/apply-style-guide` | Apply a repo style guide, or Google's if none |
+| `/write-e2e-tests` | Write e2e tests for user-provided files |
+| `/write-unit-tests` | Write unit tests for named units |
+| `/write-storybook` | Write Storybook stories for named components |
 | `/write-handoff` | Compact this conversation so the next agent can continue |
 | `/review-code` | Two-axis review (standards + spec) since a fixed point |
 | `/develop-with-tdd` | Tests first, watch them fail, then write the code |
@@ -32,6 +38,12 @@ If the user describes a current task, recommend from this pack only:
 - **Sharpen a plan, design, or idea before building** → `/grill-me`
 - **Implement a feature or bugfix** → `/develop-with-tdd`
 - **Writing or refactoring React / Next.js for performance** → `/apply-best-practices`
+- **Format with Prettier** → `/apply-prettier`
+- **Fix Biome or ESLint** → `/fix-lint`
+- **Apply a style guide** → `/apply-style-guide`
+- **Write e2e tests (paths required)** → `/write-e2e-tests`
+- **Write unit tests** → `/write-unit-tests`
+- **Write Storybook stories** → `/write-storybook`
 - **Review a branch, PR, or work since a commit** → `/review-code`
 - **Commit the current work** → `/create-commit`
 - **Organize a frontend with FSD layers and slices** → `/feature-sliced-design`

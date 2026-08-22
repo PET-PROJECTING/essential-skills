@@ -1,0 +1,5 @@
+interface:
+  display_name: "Write Storybook"
+  short_description: "Stories for named components"
+policy:
+  allow_implicit_invocation: false

@@ -1,10 +1,10 @@
 {
   "name": "essential-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Interactive CLI to install a curated set of agent skills for Cursor, Claude Code, Codex, Copilot, and other AI coding agents.",
   "type": "module",
   "bin": {
-    "essential-skills": "./bin/cli.js"
+    "essential-skills": "bin/cli.js"
   },
   "files": [
     "bin",
@@ -24,6 +24,14 @@
     "cli"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PET-PROJECTING/essential-skills.git"
+  },
+  "homepage": "https://github.com/PET-PROJECTING/essential-skills#readme",
+  "bugs": {
+    "url": "https://github.com/PET-PROJECTING/essential-skills/issues"
+  },
   "engines": {
     "node": ">=20.12.0"
   },

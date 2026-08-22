@@ -1,0 +1,5 @@
+interface:
+  display_name: "Apply Prettier"
+  short_description: "Format files with Prettier"
+policy:
+  allow_implicit_invocation: false

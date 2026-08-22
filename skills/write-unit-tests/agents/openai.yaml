@@ -1,0 +1,5 @@
+interface:
+  display_name: "Write Unit Tests"
+  short_description: "Unit tests for named units"
+policy:
+  allow_implicit_invocation: false

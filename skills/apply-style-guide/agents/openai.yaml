@@ -1,0 +1,5 @@
+interface:
+  display_name: "Apply Style Guide"
+  short_description: "Apply repo or Google style rules"
+policy:
+  allow_implicit_invocation: false
