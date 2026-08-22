@@ -148,6 +148,22 @@ function displayDest(agent, location) {
   return dest.startsWith(HOME) ? dest.replace(HOME, '~') : path.relative(process.cwd(), dest) || dest;
 }
 
+function formatPath(dest) {
+  return dest.startsWith(HOME) ? dest.replace(HOME, '~') : dest;
+}
+
+function existingSkillIds(destRoots, selectedIds) {
+  const found = new Set();
+
+  for (const destRoot of destRoots) {
+    for (const id of selectedIds) {
+      if (existsSync(path.join(destRoot, id))) found.add(id);
+    }
+  }
+
+  return [...found];
+}
+
 function detectedAgentIds() {
   return AGENTS.filter((agent) => agent.detect.some((dir) => existsSync(dir))).map(
     (agent) => agent.id,
@@ -244,6 +260,33 @@ async function main() {
       ),
     ),
   ];
+  const destLabels = destRoots.map(formatPath).join(', ');
+
+  const conflicts = existingSkillIds(destRoots, selected);
+  if (conflicts.length > 0) {
+    const nameById = new Map(skills.map((skill) => [skill.id, skill.name]));
+    const names = conflicts.map((id) => nameById.get(id) || id);
+    const action = await p.select({
+      message:
+        conflicts.length === 1
+          ? `${names[0]} is already installed at ${destLabels}. Override it?`
+          : `${conflicts.length} selected skills are already installed at ${destLabels} (${names.join(', ')}). Override them?`,
+      options: [
+        {
+          value: 'override',
+          label: 'Override',
+          hint: 'Replace the existing copies',
+        },
+        {
+          value: 'cancel',
+          label: 'Cancel',
+          hint: 'Leave existing skills as they are',
+        },
+      ],
+    });
+
+    if (p.isCancel(action) || action === 'cancel') onCancel();
+  }
 
   const spinner = p.spinner();
   const countLabel = `${selected.length} skill${selected.length === 1 ? '' : 's'}`;
@@ -259,9 +302,6 @@ async function main() {
     }
   }
 
-  const destLabels = destRoots
-    .map((dest) => (dest.startsWith(HOME) ? dest.replace(HOME, '~') : dest))
-    .join(', ');
   spinner.stop(`Installed ${countLabel} to ${destLabels}`);
   p.outro(
     'Restart your agent session to pick up the new skills. Then run /show-skill-catalog to see what each skill does.',

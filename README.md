@@ -10,7 +10,7 @@ Requires Node.js 20.12 or later.
 npx essential-skills
 ```
 
-The installer asks where to put skills (your home directory or the current project), which agents should receive them, and which skills to copy.
+The installer asks where to put skills (your home directory or the current project), which agents should receive them, and which skills to copy. If a skill with the same name is already installed, it asks whether to override the existing copy or cancel.
 
 Global installs land in each agent's home-directory skills folder. Project installs go into the matching folder in the current repo (for example `.cursor/skills` or `.agents/skills`).
 
