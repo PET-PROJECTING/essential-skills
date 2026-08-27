@@ -14,7 +14,7 @@ List the skills from **this pack** and, if the user says what they are trying to
 | `/show-skill-catalog` | Lists this pack and routes you to the right skill |
 | `/find-skills` | Search and install skills from the open ecosystem (skills.sh) |
 | `/grill-me` | Relentless interview to sharpen a plan or design |
-| `/create-commit` | Conventional commit from the diff, with intelligent staging |
+| `/create-commit` | Split work into logical conventional commits (uses agent session history when available) |
 | `/apply-best-practices` | React and Next.js performance rules from Vercel |
 | `/apply-prettier` | Format files with the project's Prettier |
 | `/fix-lint` | Fix Biome or ESLint issues |
