@@ -1,7 +1,7 @@
 {
   "name": "essential-skills",
-  "version": "1.3.0",
-  "description": "Interactive CLI to install a curated set of agent skills for Cursor, Claude Code, Codex, Copilot, and other AI coding agents.",
+  "version": "1.4.0",
+  "description": "Interactive CLI to install agent skills with Quick and Full presets for Cursor, Claude Code, Codex, Copilot, and other AI coding agents.",
   "type": "module",
   "bin": {
     "essential-skills": "bin/cli.js"

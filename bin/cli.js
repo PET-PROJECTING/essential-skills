@@ -6,6 +6,7 @@ import { cp, mkdir, readdir, readFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { overheadHint, PRESETS, skillIdsForPreset } from './presets.js';
 
 const HOME = os.homedir();
 const SKILLS_ROOT = path.join(
@@ -164,6 +165,21 @@ function existingSkillIds(destRoots, selectedIds) {
   return [...found];
 }
 
+async function installedPackSkillIds(destRoots, packIds) {
+  const found = new Set();
+
+  for (const destRoot of destRoots) {
+    if (!existsSync(destRoot)) continue;
+
+    const entries = await readdir(destRoot, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory() && packIds.has(entry.name)) found.add(entry.name);
+    }
+  }
+
+  return [...found].sort((a, b) => a.localeCompare(b));
+}
+
 function detectedAgentIds() {
   return AGENTS.filter((agent) => agent.detect.some((dir) => existsSync(dir))).map(
     (agent) => agent.id,
@@ -197,17 +213,12 @@ async function listSkills() {
   return skills;
 }
 
-async function main() {
-  p.intro('essential-skills');
-
-  const skills = await listSkills();
-  if (skills.length === 0) {
-    p.cancel('No skills found to install.');
-    process.exit(1);
-  }
-
+async function promptLocation(action) {
   const location = await p.select({
-    message: 'How do you want to install these skills?',
+    message:
+      action === 'install'
+        ? 'How do you want to install these skills?'
+        : 'Where should skills be removed from?',
     options: [
       {
         value: 'global',
@@ -223,12 +234,18 @@ async function main() {
   });
 
   if (p.isCancel(location)) onCancel();
+  return location;
+}
 
+async function promptAgents(location, action) {
   const detected = detectedAgentIds();
   const initialAgents = detected.length > 0 ? detected : ['claude-code', 'cursor'];
 
   const selectedAgents = await p.multiselect({
-    message: 'Which agents should receive these skills?',
+    message:
+      action === 'install'
+        ? 'Which agents should receive these skills?'
+        : 'Which agents should be cleaned up?',
     options: AGENTS.map((agent) => ({
       value: agent.id,
       label: agent.label,
@@ -239,27 +256,81 @@ async function main() {
   });
 
   if (p.isCancel(selectedAgents)) onCancel();
+  return selectedAgents;
+}
 
-  const selected = await p.multiselect({
-    message: 'Select skills to install',
-    options: skills.map((skill) => ({
-      value: skill.id,
-      label: skill.name,
-      hint: truncate(skill.description),
-    })),
-    initialValues: skills.map((skill) => skill.id),
-    required: true,
-  });
-
-  if (p.isCancel(selected)) onCancel();
-
-  const destRoots = [
+function destRootsFor(selectedAgents, location) {
+  return [
     ...new Set(
       AGENTS.filter((agent) => selectedAgents.includes(agent.id)).map((agent) =>
         destFor(agent, location),
       ),
     ),
   ];
+}
+
+async function promptSkillSelection(skills) {
+  const allIds = skills.map((skill) => skill.id);
+
+  const mode = await p.select({
+    message: 'How do you want to pick skills?',
+    options: [
+      ...PRESETS.map((preset) => ({
+        value: preset.id,
+        label: preset.label,
+        hint: preset.hint,
+      })),
+      {
+        value: 'manual',
+        label: 'Choose manually',
+        hint: 'Pick each skill yourself',
+      },
+    ],
+  });
+
+  if (p.isCancel(mode)) onCancel();
+
+  if (mode === 'manual') {
+    const selected = await p.multiselect({
+      message: 'Select skills to install',
+      options: skills.map((skill) => ({
+        value: skill.id,
+        label: skill.name,
+        hint: truncate(overheadHint(skill.id) || skill.description),
+      })),
+      initialValues: allIds,
+      required: true,
+    });
+
+    if (p.isCancel(selected)) onCancel();
+    return selected;
+  }
+
+  const presetIds = skillIdsForPreset(mode, allIds);
+  const preset = PRESETS.find((entry) => entry.id === mode);
+  const excluded = allIds.filter((id) => !presetIds.includes(id));
+
+  p.note(
+    [
+      `Installing ${presetIds.length} skill${presetIds.length === 1 ? '' : 's'} from "${preset.label}".`,
+      excluded.length > 0
+        ? `Skipping ${excluded.length} (e.g. ${excluded.slice(0, 3).join(', ')}${excluded.length > 3 ? ', …' : ''}).`
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n'),
+    'Preset',
+  );
+
+  return presetIds;
+}
+
+async function runInstall(skills) {
+  const location = await promptLocation('install');
+  const selectedAgents = await promptAgents(location, 'install');
+  const selected = await promptSkillSelection(skills);
+
+  const destRoots = destRootsFor(selectedAgents, location);
   const destLabels = destRoots.map(formatPath).join(', ');
 
   const conflicts = existingSkillIds(destRoots, selected);
@@ -306,6 +377,90 @@ async function main() {
   p.outro(
     'Restart your agent session to pick up the new skills. Then run /show-skill-catalog to see what each skill does.',
   );
+}
+
+async function runClear(skills) {
+  const location = await promptLocation('clear');
+  const selectedAgents = await promptAgents(location, 'clear');
+
+  const destRoots = destRootsFor(selectedAgents, location);
+  const destLabels = destRoots.map(formatPath).join(', ');
+  const packIds = new Set(skills.map((skill) => skill.id));
+  const installed = await installedPackSkillIds(destRoots, packIds);
+
+  if (installed.length === 0) {
+    p.cancel(`No essential-skills pack skills found at ${destLabels}.`);
+    process.exit(0);
+  }
+
+  const nameById = new Map(skills.map((skill) => [skill.id, skill.name]));
+  const selected = await p.multiselect({
+    message: 'Select skills to remove',
+    options: installed.map((id) => ({
+      value: id,
+      label: nameById.get(id) || id,
+      hint: truncate(skills.find((skill) => skill.id === id)?.description || ''),
+    })),
+    initialValues: installed,
+    required: true,
+  });
+
+  if (p.isCancel(selected)) onCancel();
+
+  const confirmed = await p.confirm({
+    message: `Remove ${selected.length} skill${selected.length === 1 ? '' : 's'} from ${destLabels}?`,
+    initialValue: false,
+  });
+
+  if (p.isCancel(confirmed) || !confirmed) onCancel();
+
+  const spinner = p.spinner();
+  const countLabel = `${selected.length} skill${selected.length === 1 ? '' : 's'}`;
+  spinner.start(`Removing ${countLabel}`);
+
+  for (const destRoot of destRoots) {
+    for (const id of selected) {
+      await rm(path.join(destRoot, id), { recursive: true, force: true });
+    }
+  }
+
+  spinner.stop(`Removed ${countLabel} from ${destLabels}`);
+  p.outro('Restart your agent session so it stops loading the removed skills.');
+}
+
+async function main() {
+  p.intro('essential-skills');
+
+  const skills = await listSkills();
+  if (skills.length === 0) {
+    p.cancel('No skills found in this pack.');
+    process.exit(1);
+  }
+
+  const action = await p.select({
+    message: 'What would you like to do?',
+    options: [
+      {
+        value: 'install',
+        label: 'Install skills',
+        hint: 'Copy skills into project or global agent folders',
+      },
+      {
+        value: 'clear',
+        label: 'Clear installed skills',
+        hint: 'Remove this pack from project or global folders',
+      },
+    ],
+  });
+
+  if (p.isCancel(action)) onCancel();
+
+  if (action === 'clear') {
+    await runClear(skills);
+    return;
+  }
+
+  await runInstall(skills);
 }
 
 main().catch((error) => {

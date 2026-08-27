@@ -36,7 +36,7 @@ If the user describes a current task, recommend from this pack only:
 
 - **What can I do / what did I install?** → `/show-skill-catalog` (this skill)
 - **Sharpen a plan, design, or idea before building** → `/grill-me`
-- **Implement a feature, fix, or adjustment** → `/grill-me` first (skip only for questions with no code change), then `/develop-with-tdd`
+- **Implement, refactor, migrate, or "review and replace/improve …"** → `/grill-me` first (skip only for pure Q&A or trivial 1–2 file edits with no trade-offs); if `/develop-with-tdd` is installed, use it next for the implementation
 - **Writing or refactoring React / Next.js for performance** → `/apply-best-practices`
 - **Format with Prettier** → `/apply-prettier`
 - **Fix Biome or ESLint** → `/fix-lint`

@@ -1,17 +1,41 @@
 ---
 name: grill-me
 description: >-
-  Relentless interview to sharpen a plan before any implementation. Use when
-  the user wants a feature, fix, bugfix, adjustment, refactor, or other code
-  change. Do not use when the user only asks a question, wants an explanation,
-  a read-only look at code, or an opinion with no file changes implied. A
-  question that still means "make this change" is implementation work — grill
-  first.
+  Relentless interview to sharpen a plan before implementation. Use when the
+  user wants any code change — feature, fix, refactor, migration, library
+  swap, or "review X and replace/improve/migrate Y". Use when multiple valid
+  approaches exist or scope is unclear, even if the request sounds analytical.
+  Skip only for pure Q&A with no file changes, read-only review with no
+  follow-up work, or trivial surgical edits (1–2 files, one obvious approach,
+  no trade-offs). When unsure, grill.
 ---
 
-Run a grilling session **before any feature, fix, or adjustment**. Interview the user relentlessly until you reach a shared understanding. Do **not** start implementing in the same turn as grilling.
+Run a grilling session **before any non-trivial implementation**. Interview the user relentlessly until you reach a shared understanding. Do **not** start implementing in the same turn as grilling.
 
-**Skip this skill** only when the user wants an explanation, a read-only look at code, or an opinion — no file changes implied. Intent matters, not punctuation.
+## When to invoke (default: yes)
+
+Invoke this skill whenever the user expects **you to change code**, including when they frame it as review, audit, or analysis that leads to changes.
+
+**Always grill when any of these apply:**
+
+- Feature, fix, bugfix, adjustment, refactor, migration, or library swap
+- **"Review … and replace / improve / migrate / fix …"** — audit-then-implement is implementation work, not read-only review
+- **Room for dispute** — more than one reasonable approach, unclear scope, cross-cutting impact, or architectural choices (e.g. validations → Zod: where schemas live, error shape, migration order, shared vs inline)
+- **Multi-file or pattern-level work** — touching several files, layers, or conventions
+- The user did not spell out every decision; assumptions would be needed to start coding
+
+**When in doubt, invoke this skill.** A false-positive grill costs one round of questions; a false-negative skips alignment and causes rework.
+
+## When to skip (narrow exceptions only)
+
+Skip only in one of these cases:
+
+1. **No file changes** — pure explanation, "how does this work?", comparison, or opinion with no implied follow-up work
+2. **Trivially surgical** — roughly 1–2 files, one obvious approach, established project pattern, no meaningful trade-offs (typo, rename, add a null check where the pattern already exists, fix a single lint in one place)
+
+Do **not** skip because the request contains words like *review*, *audit*, *analyze*, or *look at* — read the full intent. If the outcome includes changing code, grill first.
+
+Intent matters, not punctuation.
 
 Map this as a **design tree**: every decision branches into the decisions that hang off it.
 
