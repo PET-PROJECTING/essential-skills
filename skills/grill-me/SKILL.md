@@ -6,8 +6,7 @@ description: >-
   swap, or "review X and replace/improve/migrate Y". Use when multiple valid
   approaches exist or scope is unclear, even if the request sounds analytical.
   Skip only for pure Q&A with no file changes, read-only review with no
-  follow-up work, or trivial surgical edits (1–2 files, one obvious approach,
-  no trade-offs). When unsure, grill.
+  follow-up work. When unsure, grill.
 ---
 
 Run a grilling session **before any non-trivial implementation**. Interview the user relentlessly until you reach a shared understanding. Do **not** start implementing in the same turn as grilling.

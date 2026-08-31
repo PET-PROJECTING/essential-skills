@@ -70,7 +70,7 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 | --- | --- | --- |
 | `show-skill-catalog` | List this pack and route you to the right skill | Quick, Full |
 | `find-skills` | Discover and install skills from the open ecosystem | Quick, Full |
-| `grill-me` | Interview before implementation; skip only pure Q&A or trivial edits | Quick, Full |
+| `grill-me` | Interview before implementation; skip only pure Q&A or read-only review with no follow-up | Quick, Full |
 | `create-commit` | Split work into logical conventional commits; uses agent session history when available | Quick, Full |
 | `fix-lint` | Fix Biome or ESLint issues on named or changed files | Quick, Full |
 | `apply-prettier` | Format named or changed files with the project's Prettier | Quick, Full |
