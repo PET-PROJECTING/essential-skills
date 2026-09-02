@@ -29,17 +29,17 @@ Pick a preset during install, or choose skills manually.
 
 | Preset | Best for | Skills |
 | --- | --- | --- |
-| **Quick** | Pet projects, prototypes, fast iteration | 10 skills — planning and hygiene, **no TDD or test overhead** |
-| **Full** | Production apps where quality and tests matter | All 18 skills |
+| **Quick** | Pet projects, prototypes, fast iteration | 11 skills — planning and hygiene, **no TDD or test overhead** |
+| **Full** | Production apps where quality and tests matter | All 19 skills |
 | **Manual** | Mix and match | Pick each skill; high-overhead ones are labeled `slow` or `moderate` in the picker |
 
-### Quick preset (10 skills)
+### Quick preset (11 skills)
 
-`show-skill-catalog`, `find-skills`, `grill-me`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
+`show-skill-catalog`, `find-skills`, `grill-me`, `fix-tech-debt`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
 
 Keeps alignment before building (`grill-me`) and a SOLID pass on demand, but skips TDD, test-writing, review, Storybook, and architecture skills so tasks resolve faster.
 
-### Full preset (18 skills)
+### Full preset (19 skills)
 
 Everything in Quick, plus:
 
@@ -58,6 +58,7 @@ Installing every skill makes the agent heavier on implementation work. These add
 | `write-e2e-tests` | High | E2E specs are slow to author and run |
 | `review-code` | High | Two parallel sub-agents over the full diff |
 | `grill-me` | Medium | Interview rounds and plan confirmation before coding |
+| `fix-tech-debt` | Medium | Scan debt docs, domain inventory, selection, then grilling before fixes |
 | `request-refactor-plan` | Medium | Interview rounds, then a GitHub issue with a tiny-commit plan |
 | `apply-solid-principles` | Medium | Can split modules and invert dependencies across several files |
 | `apply-best-practices` | Medium | 70 React/Next.js rules; can trigger broad refactors |
@@ -73,6 +74,7 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 | `show-skill-catalog` | List this pack and route you to the right skill | Quick, Full |
 | `find-skills` | Discover and install skills from the open ecosystem | Quick, Full |
 | `grill-me` | Interview before implementation; skip only pure Q&A or read-only review with no follow-up | Quick, Full |
+| `fix-tech-debt` | Discover README/TODO/FIX debt, group by domain, pick items, grill an implementation plan | Quick, Full |
 | `request-refactor-plan` | Interview, then file a GitHub issue with a tiny-commit refactor plan | Quick, Full |
 | `apply-solid-principles` | Apply SRP, OCP, LSP, ISP, and DIP to named or changed modules | Quick, Full |
 | `create-commit` | Split work into logical conventional commits; uses agent session history when available | Quick, Full |

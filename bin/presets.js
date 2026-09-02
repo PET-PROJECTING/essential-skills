@@ -31,6 +31,10 @@ export const SKILL_OVERHEAD = {
     overhead: 'medium',
     reason: 'Interview rounds and plan confirmation before any implementation',
   },
+  'fix-tech-debt': {
+    overhead: 'medium',
+    reason: 'Repo scan, domain inventory, selection, then grilling rounds before implementation',
+  },
   'apply-best-practices': {
     overhead: 'medium',
     reason: '70 React/Next.js performance rules; can trigger broad refactors',
@@ -91,6 +95,7 @@ export const PRESETS = [
       'show-skill-catalog',
       'find-skills',
       'grill-me',
+      'fix-tech-debt',
       'request-refactor-plan',
       'apply-solid-principles',
       'create-commit',

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Fix Tech Debt"
+  short_description: "Triage debt docs, pick items, grill a plan"
+policy:
+  allow_implicit_invocation: false
