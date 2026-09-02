@@ -43,6 +43,14 @@ export const SKILL_OVERHEAD = {
     overhead: 'medium',
     reason: 'Multi-file refactors across responsibility and feature folders',
   },
+  'request-refactor-plan': {
+    overhead: 'medium',
+    reason: 'Interview rounds, then a GitHub issue with a tiny-commit plan',
+  },
+  'apply-solid-principles': {
+    overhead: 'medium',
+    reason: 'Can split modules and invert dependencies across several files',
+  },
   'apply-style-guide': {
     overhead: 'low',
     reason: 'Style pass on touched files',
@@ -83,6 +91,8 @@ export const PRESETS = [
       'show-skill-catalog',
       'find-skills',
       'grill-me',
+      'request-refactor-plan',
+      'apply-solid-principles',
       'create-commit',
       'fix-lint',
       'apply-prettier',

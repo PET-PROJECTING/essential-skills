@@ -14,6 +14,8 @@ List the skills from **this pack** and, if the user says what they are trying to
 | `/show-skill-catalog` | Lists this pack and routes you to the right skill |
 | `/find-skills` | Search and install skills from the open ecosystem (skills.sh) |
 | `/grill-me` | Relentless interview to sharpen a plan or design |
+| `/request-refactor-plan` | Interview, then file a GitHub issue with a tiny-commit refactor plan |
+| `/apply-solid-principles` | Apply SRP, OCP, LSP, ISP, and DIP to named or changed modules |
 | `/create-commit` | Split work into logical conventional commits (uses agent session history when available) |
 | `/apply-best-practices` | React and Next.js performance rules from Vercel |
 | `/apply-prettier` | Format files with the project's Prettier |
@@ -36,7 +38,9 @@ If the user describes a current task, recommend from this pack only:
 
 - **What can I do / what did I install?** → `/show-skill-catalog` (this skill)
 - **Sharpen a plan, design, or idea before building** → `/grill-me`
+- **Plan a refactor as an RFC / GitHub issue with tiny commits** → `/request-refactor-plan`
 - **Implement, refactor, migrate, or "review and replace/improve …"** → `/grill-me` first (skip only for pure Q&A or read-only review with no follow-up work); if `/develop-with-tdd` is installed, use it next for the implementation
+- **Apply SOLID (SRP/OCP/LSP/ISP/DIP) to existing modules** → `/apply-solid-principles`
 - **Writing or refactoring React / Next.js for performance** → `/apply-best-practices`
 - **Format with Prettier** → `/apply-prettier`
 - **Fix Biome or ESLint** → `/fix-lint`

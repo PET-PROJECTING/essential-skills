@@ -1,0 +1,5 @@
+interface:
+  display_name: "Apply SOLID Principles"
+  short_description: "Fix SRP, OCP, LSP, ISP, DIP in named code"
+policy:
+  allow_implicit_invocation: false
