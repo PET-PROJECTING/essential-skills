@@ -17,6 +17,8 @@ The CLI walks you through:
 3. Which **agents** to target
 4. Which **skills** to copy — via preset or manual selection
 
+At any step you can choose **← Go back** to revise a previous choice or **Cancel** to exit without changes.
+
 Global installs land in each agent's home-directory skills folder. Project installs go into the matching folder in the current repo (for example `.cursor/skills` or `.agents/skills`).
 
 On install, if a skill with the same name is already present, the CLI asks whether to override it or cancel. **Clear** only removes skills from this pack — other skills in the same folders are left alone.
