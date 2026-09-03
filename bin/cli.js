@@ -135,34 +135,104 @@ function truncate(text, max = 64) {
 
 const NAV = {
   BACK: '__back__',
-  CANCEL: '__cancel__',
 };
-
-function navOptions(canBack = true) {
-  const options = [];
-  if (canBack) {
-    options.push({
-      value: NAV.BACK,
-      label: '← Go back',
-      hint: 'Return to the previous step',
-    });
-  }
-  options.push({
-    value: NAV.CANCEL,
-    label: 'Cancel',
-    hint: 'Exit without changes',
-  });
-  return options;
-}
-
-function resolveNav(value) {
-  if (p.isCancel(value) || value === NAV.CANCEL) onCancel();
-  return value;
-}
 
 function onCancel() {
   p.cancel('Cancelled.');
   process.exit(0);
+}
+
+function resolveCancel(value) {
+  if (p.isCancel(value)) onCancel();
+  return value;
+}
+
+function navMessage(message, canBack) {
+  return canBack ? `${message}  (← back)` : message;
+}
+
+function swallowLeftArrow(onLeft) {
+  const input = process.stdin;
+  const origEmit = input.emit;
+
+  input.emit = function patchedEmit(event, ...args) {
+    if (event === 'keypress') {
+      const key = args[1];
+      if (key?.name === 'left' && !key.ctrl && !key.meta && !key.shift) {
+        onLeft();
+        return false;
+      }
+    }
+
+    return origEmit.call(this, event, ...args);
+  };
+
+  return () => {
+    input.emit = origEmit;
+  };
+}
+
+async function withNav(factory, canBack = true) {
+  if (!canBack) return resolveCancel(await factory());
+
+  const ac = new AbortController();
+  let back = false;
+  const restore = swallowLeftArrow(() => {
+    if (back || ac.signal.aborted) return;
+    back = true;
+    ac.abort();
+  });
+
+  try {
+    const value = await factory(ac.signal);
+    if (back) return NAV.BACK;
+    return resolveCancel(value);
+  } finally {
+    restore();
+  }
+}
+
+function selectNav(opts, canBack = true) {
+  return withNav(
+    (signal) =>
+      p.select({
+        ...opts,
+        message: navMessage(opts.message, canBack),
+        ...(signal ? { signal } : {}),
+      }),
+    canBack,
+  );
+}
+
+function multiselectNav(opts, canBack = true) {
+  return withNav(
+    (signal) =>
+      p.multiselect({
+        ...opts,
+        message: navMessage(opts.message, canBack),
+        ...(signal ? { signal } : {}),
+      }),
+    canBack,
+  );
+}
+
+function firstSentence(text) {
+  const compact = (text || '').replace(/\s+/g, ' ').trim();
+  if (!compact) return '';
+  const idx = compact.search(/\.\s/);
+  const sentence = idx === -1 ? compact : compact.slice(0, idx);
+  return sentence.replace(/[.!?]+$/, '');
+}
+
+function catalogLines(skills, selectedIds) {
+  const byId = new Map(skills.map((skill) => [skill.id, skill]));
+  return selectedIds
+    .map((id) => byId.get(id) || { id, name: id, description: '' })
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((skill) => {
+      const summary = firstSentence(skill.description) || skill.name;
+      return `/${skill.id} — ${truncate(summary, 88)}`;
+    });
 }
 
 function destFor(agent, location) {
@@ -240,8 +310,8 @@ async function listSkills() {
   return skills;
 }
 
-async function promptLocation(action, { canBack = true } = {}) {
-  const location = await p.select({
+async function promptLocation(action) {
+  return selectNav({
     message:
       action === 'install'
         ? 'How do you want to install these skills?'
@@ -257,62 +327,27 @@ async function promptLocation(action, { canBack = true } = {}) {
         label: 'Current project',
         hint: 'Kept in this repo',
       },
-      ...navOptions(canBack),
     ],
   });
-
-  return resolveNav(location);
-}
-
-async function confirmMultiselect(message, selected) {
-  const action = await p.select({
-    message,
-    options: [
-      {
-        value: 'continue',
-        label: 'Continue',
-        hint: `${selected.length} selected`,
-      },
-      ...navOptions(true),
-    ],
-  });
-
-  const resolved = resolveNav(action);
-  if (resolved === NAV.BACK) return NAV.BACK;
-  return selected;
 }
 
 async function promptAgents(location, action) {
   const detected = detectedAgentIds();
   const initialAgents = detected.length > 0 ? detected : ['claude-code', 'cursor'];
 
-  while (true) {
-    const selectedAgents = await p.multiselect({
-      message:
-        action === 'install'
-          ? 'Which agents should receive these skills?'
-          : 'Which agents should be cleaned up?',
-      options: AGENTS.map((agent) => ({
-        value: agent.id,
-        label: agent.label,
-        hint: [agent.hint, displayDest(agent, location)].filter(Boolean).join(' · '),
-      })),
-      initialValues: initialAgents,
-      required: true,
-    });
-
-    if (p.isCancel(selectedAgents)) onCancel();
-
-    const confirmed = await confirmMultiselect(
+  return multiselectNav({
+    message:
       action === 'install'
-        ? 'Continue with these agents?'
-        : 'Continue with these agents to clean up?',
-      selectedAgents,
-    );
-
-    if (confirmed === NAV.BACK) continue;
-    return confirmed;
-  }
+        ? 'Which agents should receive these skills?'
+        : 'Which agents should be cleaned up?',
+    options: AGENTS.map((agent) => ({
+      value: agent.id,
+      label: agent.label,
+      hint: [agent.hint, displayDest(agent, location)].filter(Boolean).join(' · '),
+    })),
+    initialValues: initialAgents,
+    required: true,
+  });
 }
 
 function destRootsFor(selectedAgents, location) {
@@ -329,7 +364,7 @@ async function promptSkillSelection(skills) {
   const allIds = skills.map((skill) => skill.id);
 
   while (true) {
-    const mode = await p.select({
+    const mode = await selectNav({
       message: 'How do you want to pick skills?',
       options: [
         ...PRESETS.map((preset) => ({
@@ -342,40 +377,29 @@ async function promptSkillSelection(skills) {
           label: 'Choose manually',
           hint: 'Pick each skill yourself',
         },
-        ...navOptions(true),
       ],
     });
 
-    const resolvedMode = resolveNav(mode);
-    if (resolvedMode === NAV.BACK) return NAV.BACK;
+    if (mode === NAV.BACK) return NAV.BACK;
 
-    if (resolvedMode === 'manual') {
-      while (true) {
-        const selected = await p.multiselect({
-          message: 'Select skills to install',
-          options: skills.map((skill) => ({
-            value: skill.id,
-            label: skill.name,
-            hint: truncate(overheadHint(skill.id) || skill.description),
-          })),
-          initialValues: allIds,
-          required: true,
-        });
+    if (mode === 'manual') {
+      const selected = await multiselectNav({
+        message: 'Select skills to install',
+        options: skills.map((skill) => ({
+          value: skill.id,
+          label: skill.name,
+          hint: truncate(overheadHint(skill.id) || skill.description),
+        })),
+        initialValues: allIds,
+        required: true,
+      });
 
-        if (p.isCancel(selected)) onCancel();
-
-        const confirmed = await confirmMultiselect(
-          'Continue with these skills?',
-          selected,
-        );
-
-        if (confirmed === NAV.BACK) continue;
-        return confirmed;
-      }
+      if (selected === NAV.BACK) continue;
+      return selected;
     }
 
-    const presetIds = skillIdsForPreset(resolvedMode, allIds);
-    const preset = PRESETS.find((entry) => entry.id === resolvedMode);
+    const presetIds = skillIdsForPreset(mode, allIds);
+    const preset = PRESETS.find((entry) => entry.id === mode);
     const excluded = allIds.filter((id) => !presetIds.includes(id));
 
     p.note(
@@ -395,24 +419,24 @@ async function promptSkillSelection(skills) {
 }
 
 async function promptAction() {
-  const action = await p.select({
-    message: 'What would you like to do?',
-    options: [
-      {
-        value: 'install',
-        label: 'Install skills',
-        hint: 'Copy skills into project or global agent folders',
-      },
-      {
-        value: 'clear',
-        label: 'Clear installed skills',
-        hint: 'Remove this pack from project or global folders',
-      },
-      ...navOptions(false),
-    ],
-  });
-
-  return resolveNav(action);
+  return selectNav(
+    {
+      message: 'What would you like to do?',
+      options: [
+        {
+          value: 'install',
+          label: 'Install skills',
+          hint: 'Copy skills into project or global agent folders',
+        },
+        {
+          value: 'clear',
+          label: 'Clear installed skills',
+          hint: 'Remove this pack from project or global folders',
+        },
+      ],
+    },
+    false,
+  );
 }
 
 async function runInstall(skills) {
@@ -459,7 +483,7 @@ async function runInstall(skills) {
     if (step === 'conflicts' && conflicts.length > 0) {
       const nameById = new Map(skills.map((skill) => [skill.id, skill.name]));
       const names = conflicts.map((id) => nameById.get(id) || id);
-      const action = await p.select({
+      const action = await selectNav({
         message:
           conflicts.length === 1
             ? `${names[0]} is already installed at ${destLabels}. Override it?`
@@ -470,15 +494,19 @@ async function runInstall(skills) {
             label: 'Override',
             hint: 'Replace the existing copies',
           },
-          ...navOptions(true),
+          {
+            value: 'cancel',
+            label: 'Cancel',
+            hint: 'Leave existing skills as they are',
+          },
         ],
       });
 
-      const resolvedAction = resolveNav(action);
-      if (resolvedAction === NAV.BACK) {
+      if (action === NAV.BACK) {
         step = 'skills';
         continue;
       }
+      if (action === 'cancel') onCancel();
     }
 
     step = 'install';
@@ -502,8 +530,9 @@ async function runInstall(skills) {
   }
 
   spinner.stop(`Installed ${countLabel} to ${destLabels}`);
+  p.note(catalogLines(skills, selected).join('\n'), 'Installed skills');
   p.outro(
-    'Restart your agent session to pick up the new skills. Then run /show-skill-catalog to see what each skill does.',
+    'Restart your agent session to pick up the new skills. Run /show-skill-catalog anytime for this list.',
   );
 }
 
@@ -540,41 +569,35 @@ async function runClear(skills) {
 
     if (step === 'skills') {
       if (installed.length === 0) {
-        p.cancel(`No essential-skills pack skills found at ${destLabels}.`);
-        process.exit(0);
+        p.log.warn(`No essential-skills pack skills found at ${destLabels}.`);
+        step = 'agents';
+        continue;
       }
 
       const nameById = new Map(skills.map((skill) => [skill.id, skill.name]));
+      const picked = await multiselectNav({
+        message: 'Select skills to remove',
+        options: installed.map((id) => ({
+          value: id,
+          label: nameById.get(id) || id,
+          hint: truncate(skills.find((skill) => skill.id === id)?.description || ''),
+        })),
+        initialValues: installed,
+        required: true,
+      });
 
-      while (true) {
-        const picked = await p.multiselect({
-          message: 'Select skills to remove',
-          options: installed.map((id) => ({
-            value: id,
-            label: nameById.get(id) || id,
-            hint: truncate(skills.find((skill) => skill.id === id)?.description || ''),
-          })),
-          initialValues: installed,
-          required: true,
-        });
-
-        if (p.isCancel(picked)) onCancel();
-
-        const confirmed = await confirmMultiselect(
-          'Continue with these skills to remove?',
-          picked,
-        );
-
-        if (confirmed === NAV.BACK) continue;
-        selected = confirmed;
-        step = 'confirm';
-        break;
+      if (picked === NAV.BACK) {
+        step = 'agents';
+        continue;
       }
+
+      selected = picked;
+      step = 'confirm';
       continue;
     }
 
     if (step === 'confirm') {
-      const decision = await p.select({
+      const decision = await selectNav({
         message: `Remove ${selected.length} skill${selected.length === 1 ? '' : 's'} from ${destLabels}?`,
         options: [
           {
@@ -582,15 +605,19 @@ async function runClear(skills) {
             label: 'Yes, remove them',
             hint: 'Delete only skills from this pack',
           },
-          ...navOptions(true),
+          {
+            value: 'cancel',
+            label: 'Cancel',
+            hint: 'Leave installed skills as they are',
+          },
         ],
       });
 
-      const resolved = resolveNav(decision);
-      if (resolved === NAV.BACK) {
+      if (decision === NAV.BACK) {
         step = 'skills';
         continue;
       }
+      if (decision === 'cancel') onCancel();
 
       step = 'remove';
     }
