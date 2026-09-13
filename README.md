@@ -1,6 +1,10 @@
 # essential-skills
 
+**[Homepage](https://essential-skills.vercel.app/)** · [npm](https://www.npmjs.com/package/essential-skills)
+
 Interactive CLI that installs a curated set of agent skills into Cursor, Claude Code, Codex, GitHub Copilot, Gemini CLI, OpenCode, Windsurf, and other agents that read skills from `.agents/skills`.
+
+Browse skills, compare the Quick and Full packs, and see how install works on the [homepage](https://essential-skills.vercel.app/).
 
 Requires Node.js 20.12 or later.
 
