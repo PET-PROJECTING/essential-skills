@@ -1,0 +1,5 @@
+interface:
+  display_name: "Specify Context"
+  short_description: "Bootstrap project context docs, one file at a time"
+policy:
+  allow_implicit_invocation: true

@@ -35,17 +35,17 @@ Pick a preset during install, or choose skills manually.
 
 | Preset | Best for | Skills |
 | --- | --- | --- |
-| **Quick** | Pet projects, prototypes, fast iteration | 11 skills — planning and hygiene, **no TDD or test overhead** |
-| **Full** | Production apps where quality and tests matter | All 19 skills |
-| **Manual** | Mix and match | Pick each skill; high-overhead ones are labeled `slow` or `moderate` in the picker |
+| **Quick** | Pet projects, prototypes, fast iteration | 13 skills — planning and hygiene, **no TDD or test overhead** |
+| **Full** | Production apps where quality and tests matter | All 21 skills |
+| **Manual** | Mix and match | Pick each skill; high-overhead ones are labeled `slow` or `moderate` in the picker. **Spec-driven context** is one row and always copies `/specify-context` and `/create-feature-spec` together. |
 
-### Quick preset (11 skills)
+### Quick preset (13 skills)
 
-`show-skill-catalog`, `find-skills`, `grill-me`, `fix-tech-debt`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
+`show-skill-catalog`, `find-skills`, `grill-me`, `specify-context`, `create-feature-spec`, `fix-tech-debt`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
 
-Keeps alignment before building (`grill-me`) and a SOLID pass on demand, but skips TDD, test-writing, review, Storybook, and architecture skills so tasks resolve faster.
+Keeps alignment before building (`grill-me`, spec-driven context) and a SOLID pass on demand, but skips TDD, test-writing, review, Storybook, and architecture skills so tasks resolve faster.
 
-### Full preset (19 skills)
+### Full preset (21 skills)
 
 Everything in Quick, plus:
 
@@ -64,6 +64,8 @@ Installing every skill makes the agent heavier on implementation work. These add
 | `write-e2e-tests` | High | E2E specs are slow to author and run |
 | `review-code` | High | Two parallel sub-agents over the full diff |
 | `grill-me` | Medium | Interview rounds and plan confirmation before coding |
+| `specify-context` | Medium | Interview rounds to fill project context files, one file per invocation |
+| `create-feature-spec` | Medium | Interview rounds to write a unit spec and update the progress tracker |
 | `fix-tech-debt` | Medium | Scan debt docs, domain inventory, selection, then grilling before fixes |
 | `request-refactor-plan` | Medium | Interview rounds, then a GitHub issue with a tiny-commit plan |
 | `apply-solid-principles` | Medium | Can split modules and invert dependencies across several files |
@@ -80,6 +82,8 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 | `show-skill-catalog` | List this pack and route you to the right skill | Quick, Full |
 | `find-skills` | Discover and install skills from the open ecosystem | Quick, Full |
 | `grill-me` | Interview before implementation; skip only pure Q&A or read-only review with no follow-up | Quick, Full |
+| `specify-context` | Bootstrap docs context files, merge AGENTS.md/CLAUDE.md, grill one unfilled file per run | Quick, Full |
+| `create-feature-spec` | Grill a unit spec under feature-specs and update the progress tracker (installs with specify-context) | Quick, Full |
 | `fix-tech-debt` | Discover README/TODO/FIX debt, group by domain, pick items, grill an implementation plan | Quick, Full |
 | `request-refactor-plan` | Interview, then file a GitHub issue with a tiny-commit refactor plan | Quick, Full |
 | `apply-solid-principles` | Apply SRP, OCP, LSP, ISP, and DIP to named or changed modules | Quick, Full |

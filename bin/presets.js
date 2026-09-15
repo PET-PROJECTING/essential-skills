@@ -31,6 +31,14 @@ export const SKILL_OVERHEAD = {
     overhead: 'medium',
     reason: 'Interview rounds and plan confirmation before any implementation',
   },
+  'specify-context': {
+    overhead: 'medium',
+    reason: 'Interview rounds to fill project context files, one file per invocation',
+  },
+  'create-feature-spec': {
+    overhead: 'medium',
+    reason: 'Interview rounds to write a unit spec and update the progress tracker',
+  },
   'fix-tech-debt': {
     overhead: 'medium',
     reason: 'Repo scan, domain inventory, selection, then grilling rounds before implementation',
@@ -95,6 +103,8 @@ export const PRESETS = [
       'show-skill-catalog',
       'find-skills',
       'grill-me',
+      'specify-context',
+      'create-feature-spec',
       'fix-tech-debt',
       'request-refactor-plan',
       'apply-solid-principles',
@@ -113,6 +123,21 @@ export const PRESETS = [
   },
 ];
 
+/**
+ * Skills that must install or clear together. The CLI picker shows one row;
+ * after install each member is still its own slash command.
+ *
+ * @type {Array<{ id: string, label: string, hint: string, skillIds: string[] }>}
+ */
+export const BUNDLES = [
+  {
+    id: 'spec-driven-context',
+    label: 'Spec-driven context',
+    hint: 'moderate — /specify-context and /create-feature-spec (always installed together)',
+    skillIds: ['specify-context', 'create-feature-spec'],
+  },
+];
+
 export function skillIdsForPreset(presetId, allSkillIds) {
   const preset = PRESETS.find((p) => p.id === presetId);
   if (!preset) return allSkillIds;
@@ -125,4 +150,75 @@ export function overheadHint(skillId) {
   if (!info || info.overhead === 'low') return undefined;
   const tag = info.overhead === 'high' ? 'slow' : 'moderate';
   return `${tag} — ${info.reason}`;
+}
+
+const bundledSkillIds = () => new Set(BUNDLES.flatMap((bundle) => bundle.skillIds));
+
+export function expandSelectedIds(selectedIds) {
+  const out = [];
+  const seen = new Set();
+
+  for (const id of selectedIds) {
+    const bundle = BUNDLES.find((entry) => entry.id === id);
+    const ids = bundle ? bundle.skillIds : [id];
+    for (const skillId of ids) {
+      if (seen.has(skillId)) continue;
+      seen.add(skillId);
+      out.push(skillId);
+    }
+  }
+
+  return out;
+}
+
+/**
+ * Picker rows: one entry per bundle (if any member exists), plus each
+ * non-bundled skill.
+ *
+ * @param {Array<{ id: string, name: string, description: string }>} skills
+ */
+export function pickerEntries(skills) {
+  const byId = new Map(skills.map((skill) => [skill.id, skill]));
+  const bundled = bundledSkillIds();
+  const entries = [];
+
+  for (const bundle of BUNDLES) {
+    if (!bundle.skillIds.some((id) => byId.has(id))) continue;
+    entries.push({
+      value: bundle.id,
+      label: bundle.label,
+      hint: bundle.hint,
+    });
+  }
+
+  for (const skill of skills) {
+    if (bundled.has(skill.id)) continue;
+    entries.push({
+      value: skill.id,
+      label: skill.name,
+      hint: overheadHint(skill.id) || skill.description,
+    });
+  }
+
+  entries.sort((a, b) => a.label.localeCompare(b.label));
+  return entries;
+}
+
+/** Map installed skill ids to picker values (bundle id if any member is present). */
+export function pickerValuesForInstalled(installedIds) {
+  const installed = new Set(installedIds);
+  const values = [];
+  const covered = new Set();
+
+  for (const bundle of BUNDLES) {
+    if (!bundle.skillIds.some((id) => installed.has(id))) continue;
+    values.push(bundle.id);
+    for (const id of bundle.skillIds) covered.add(id);
+  }
+
+  for (const id of installedIds) {
+    if (!covered.has(id)) values.push(id);
+  }
+
+  return values;
 }

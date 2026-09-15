@@ -14,6 +14,8 @@ List the skills from **this pack** and, if the user says what they are trying to
 | `/show-skill-catalog` | Lists this pack and routes you to the right skill |
 | `/find-skills` | Search and install skills from the open ecosystem (skills.sh) |
 | `/grill-me` | Relentless interview to sharpen a plan or design |
+| `/specify-context` | Bootstrap project context docs; grill one unfilled file per run |
+| `/create-feature-spec` | Grill a unit spec and update the progress tracker |
 | `/fix-tech-debt` | Find README/TODO/FIX debt markers, group by domain, pick items, grill a plan |
 | `/request-refactor-plan` | Interview, then file a GitHub issue with a tiny-commit refactor plan |
 | `/apply-solid-principles` | Apply SRP, OCP, LSP, ISP, and DIP to named or changed modules |
@@ -39,6 +41,8 @@ If the user describes a current task, recommend from this pack only:
 
 - **What can I do / what did I install?** → `/show-skill-catalog` (this skill)
 - **Sharpen a plan, design, or idea before building** → `/grill-me`
+- **Bootstrap project context docs / six-file context / AGENTS.md read block** → `/specify-context` (then `/create-feature-spec` for unit specs)
+- **Write a feature unit spec or implementation plan for a feature** → `/create-feature-spec` (runs `/specify-context` first if context is missing)
 - **Triage TODO/FIX/README tech debt and plan fixes** → `/fix-tech-debt`
 - **Plan a refactor as an RFC / GitHub issue with tiny commits** → `/request-refactor-plan`
 - **Implement, refactor, migrate, or "review and replace/improve …"** → `/grill-me` first (skip only for pure Q&A or read-only review with no follow-up work); if `/develop-with-tdd` is installed, use it next for the implementation
@@ -59,6 +63,8 @@ If the user describes a current task, recommend from this pack only:
 
 `/feature-sliced-design` and `/use-hybrid-folder-structure` are different frontend layouts. If the user names FSD, layers, or slices, use FSD. If they name hybrid, responsibility-first, or file-kind folders, use hybrid. If they only say "reorganize src/", ask which layout they want.
 
-If more than one fits, list them in the order the human should run them (for example grill, then TDD, then commit).
+`/specify-context` and `/create-feature-spec` install as one picker item (**Spec-driven context**) but remain two slash commands.
+
+If more than one fits, list them in the order the human should run them (for example specify-context, create-feature-spec, grill, then TDD, then commit).
 
 If nothing in this pack fits, say so and suggest `/find-skills`.

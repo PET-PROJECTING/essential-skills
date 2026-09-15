@@ -1,0 +1,5 @@
+interface:
+  display_name: "Create Feature Spec"
+  short_description: "Grill a unit spec and update the progress tracker"
+policy:
+  allow_implicit_invocation: true

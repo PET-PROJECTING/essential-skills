@@ -6,7 +6,13 @@ import { cp, mkdir, readdir, readFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { overheadHint, PRESETS, skillIdsForPreset } from './presets.js';
+import {
+  expandSelectedIds,
+  pickerEntries,
+  pickerValuesForInstalled,
+  PRESETS,
+  skillIdsForPreset,
+} from './presets.js';
 
 const HOME = os.homedir();
 const SKILLS_ROOT = path.join(
@@ -383,19 +389,20 @@ async function promptSkillSelection(skills) {
     if (mode === NAV.BACK) return NAV.BACK;
 
     if (mode === 'manual') {
+      const entries = pickerEntries(skills);
       const selected = await multiselectNav({
         message: 'Select skills to install',
-        options: skills.map((skill) => ({
-          value: skill.id,
-          label: skill.name,
-          hint: truncate(overheadHint(skill.id) || skill.description),
+        options: entries.map((entry) => ({
+          value: entry.value,
+          label: entry.label,
+          hint: truncate(entry.hint),
         })),
-        initialValues: allIds,
+        initialValues: entries.map((entry) => entry.value),
         required: true,
       });
 
       if (selected === NAV.BACK) continue;
-      return selected;
+      return expandSelectedIds(selected);
     }
 
     const presetIds = skillIdsForPreset(mode, allIds);
@@ -575,14 +582,22 @@ async function runClear(skills) {
       }
 
       const nameById = new Map(skills.map((skill) => [skill.id, skill.name]));
+      const pickerValues = pickerValuesForInstalled(installed);
+      const entries = pickerEntries(skills).filter((entry) =>
+        pickerValues.includes(entry.value),
+      );
       const picked = await multiselectNav({
         message: 'Select skills to remove',
-        options: installed.map((id) => ({
-          value: id,
-          label: nameById.get(id) || id,
-          hint: truncate(skills.find((skill) => skill.id === id)?.description || ''),
+        options: entries.map((entry) => ({
+          value: entry.value,
+          label: entry.label,
+          hint: truncate(
+            entry.hint ||
+              skills.find((skill) => skill.id === entry.value)?.description ||
+              '',
+          ),
         })),
-        initialValues: installed,
+        initialValues: pickerValues,
         required: true,
       });
 
@@ -591,7 +606,7 @@ async function runClear(skills) {
         continue;
       }
 
-      selected = picked;
+      selected = expandSelectedIds(picked).filter((id) => nameById.has(id));
       step = 'confirm';
       continue;
     }
