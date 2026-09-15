@@ -41,7 +41,7 @@ Pick a preset during install, or choose skills manually.
 
 ### Quick preset (13 skills)
 
-`show-skill-catalog`, `find-skills`, `grill-me`, `specify-context`, `create-feature-spec`, `fix-tech-debt`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
+`grill-me`, `specify-context`, `create-feature-spec`, `show-skill-catalog`, `find-skills`, `fix-tech-debt`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
 
 Keeps alignment before building (`grill-me`, spec-driven context) and a SOLID pass on demand, but skips TDD, test-writing, review, Storybook, and architecture skills so tasks resolve faster.
 
@@ -49,7 +49,7 @@ Keeps alignment before building (`grill-me`, spec-driven context) and a SOLID pa
 
 Everything in Quick, plus:
 
-`apply-best-practices`, `develop-with-tdd`, `feature-sliced-design`, `review-code`, `use-hybrid-folder-structure`, `write-e2e-tests`, `write-storybook`, `write-unit-tests`
+`review-code`, `develop-with-tdd`, `write-unit-tests`, `write-e2e-tests`, `write-storybook`, `apply-best-practices`, `feature-sliced-design`, `use-hybrid-folder-structure`
 
 Use Full when testing, review, and architecture guidance are non-negotiable.
 
@@ -59,13 +59,13 @@ Installing every skill makes the agent heavier on implementation work. These add
 
 | Skill | Overhead | Why |
 | --- | --- | --- |
+| `grill-me` | Medium | Interview rounds and plan confirmation before coding |
+| `review-code` | High | Two parallel sub-agents over the full diff |
+| `specify-context` | Medium | Interview rounds to fill project context files, one file per invocation |
+| `create-feature-spec` | Medium | Interview rounds to write a unit spec and update the progress tracker |
 | `develop-with-tdd` | High | Failing test first; run the suite before and after each change |
 | `write-unit-tests` | High | Writes and runs unit tests |
 | `write-e2e-tests` | High | E2E specs are slow to author and run |
-| `review-code` | High | Two parallel sub-agents over the full diff |
-| `grill-me` | Medium | Interview rounds and plan confirmation before coding |
-| `specify-context` | Medium | Interview rounds to fill project context files, one file per invocation |
-| `create-feature-spec` | Medium | Interview rounds to write a unit spec and update the progress tracker |
 | `fix-tech-debt` | Medium | Scan debt docs, domain inventory, selection, then grilling before fixes |
 | `request-refactor-plan` | Medium | Interview rounds, then a GitHub issue with a tiny-commit plan |
 | `apply-solid-principles` | Medium | Can split modules and invert dependencies across several files |
@@ -79,11 +79,12 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 
 | Skill | What it does | Preset |
 | --- | --- | --- |
-| `show-skill-catalog` | List this pack and route you to the right skill | Quick, Full |
-| `find-skills` | Discover and install skills from the open ecosystem | Quick, Full |
 | `grill-me` | Interview before implementation; skip only pure Q&A or read-only review with no follow-up | Quick, Full |
+| `review-code` | Two-axis review of changes against repo standards and the spec | Full |
 | `specify-context` | Bootstrap docs context files, merge AGENTS.md/CLAUDE.md, grill one unfilled file per run | Quick, Full |
 | `create-feature-spec` | Grill a unit spec under feature-specs and update the progress tracker (installs with specify-context) | Quick, Full |
+| `show-skill-catalog` | List this pack and route you to the right skill | Quick, Full |
+| `find-skills` | Discover and install skills from the open ecosystem | Quick, Full |
 | `fix-tech-debt` | Discover README/TODO/FIX debt, group by domain, pick items, grill an implementation plan | Quick, Full |
 | `request-refactor-plan` | Interview, then file a GitHub issue with a tiny-commit refactor plan | Quick, Full |
 | `apply-solid-principles` | Apply SRP, OCP, LSP, ISP, and DIP to named or changed modules | Quick, Full |
@@ -96,7 +97,6 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 | `write-unit-tests` | Write unit tests for named units | Full |
 | `write-e2e-tests` | Write e2e tests for files you name | Full |
 | `write-storybook` | Write Storybook stories for named components | Full |
-| `review-code` | Two-axis review of changes against repo standards and the spec | Full |
 | `apply-best-practices` | React and Next.js performance guidelines from Vercel Engineering | Full |
 | `feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 from [fsd.how](https://fsd.how) | Full |
 | `use-hybrid-folder-structure` | Hybrid frontend layout: responsibility first, feature second | Full |

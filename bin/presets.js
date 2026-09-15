@@ -93,27 +93,63 @@ export const SKILL_OVERHEAD = {
   },
 };
 
+/**
+ * Display and install order. Context skills stay first; picker bundles appear
+ * at the first member's position (specify-context + create-feature-spec).
+ *
+ * @type {string[]}
+ */
+export const SKILL_ORDER = [
+  'grill-me',
+  'review-code',
+  'specify-context',
+  'create-feature-spec',
+  'show-skill-catalog',
+  'find-skills',
+  'fix-tech-debt',
+  'request-refactor-plan',
+  'apply-solid-principles',
+  'create-commit',
+  'fix-lint',
+  'apply-prettier',
+  'apply-style-guide',
+  'write-handoff',
+  'develop-with-tdd',
+  'write-unit-tests',
+  'write-e2e-tests',
+  'write-storybook',
+  'apply-best-practices',
+  'feature-sliced-design',
+  'use-hybrid-folder-structure',
+];
+
+const FULL_ONLY = new Set([
+  'review-code',
+  'develop-with-tdd',
+  'write-unit-tests',
+  'write-e2e-tests',
+  'write-storybook',
+  'apply-best-practices',
+  'feature-sliced-design',
+  'use-hybrid-folder-structure',
+]);
+
+const skillOrderIndex = new Map(SKILL_ORDER.map((id, index) => [id, index]));
+
+export function compareSkillIds(a, b) {
+  const left = skillOrderIndex.has(a) ? skillOrderIndex.get(a) : Number.POSITIVE_INFINITY;
+  const right = skillOrderIndex.has(b) ? skillOrderIndex.get(b) : Number.POSITIVE_INFINITY;
+  if (left !== right) return left - right;
+  return a.localeCompare(b);
+}
+
 /** @type {Array<{ id: string, label: string, hint: string, skillIds: string[] }>} */
 export const PRESETS = [
   {
     id: 'quick',
     label: 'Quick (pet projects)',
     hint: 'Fast iteration — planning and hygiene, no TDD or test overhead',
-    skillIds: [
-      'show-skill-catalog',
-      'find-skills',
-      'grill-me',
-      'specify-context',
-      'create-feature-spec',
-      'fix-tech-debt',
-      'request-refactor-plan',
-      'apply-solid-principles',
-      'create-commit',
-      'fix-lint',
-      'apply-prettier',
-      'apply-style-guide',
-      'write-handoff',
-    ],
+    skillIds: SKILL_ORDER.filter((id) => !FULL_ONLY.has(id)),
   },
   {
     id: 'full',
@@ -139,10 +175,10 @@ export const BUNDLES = [
 ];
 
 export function skillIdsForPreset(presetId, allSkillIds) {
+  const known = new Set(allSkillIds);
   const preset = PRESETS.find((p) => p.id === presetId);
-  if (!preset) return allSkillIds;
-  if (preset.skillIds === null) return allSkillIds;
-  return preset.skillIds.filter((id) => allSkillIds.includes(id));
+  const ids = !preset || preset.skillIds === null ? allSkillIds : preset.skillIds;
+  return ids.filter((id) => known.has(id)).sort(compareSkillIds);
 }
 
 export function overheadHint(skillId) {
@@ -151,8 +187,6 @@ export function overheadHint(skillId) {
   const tag = info.overhead === 'high' ? 'slow' : 'moderate';
   return `${tag} — ${info.reason}`;
 }
-
-const bundledSkillIds = () => new Set(BUNDLES.flatMap((bundle) => bundle.skillIds));
 
 export function expandSelectedIds(selectedIds) {
   const out = [];
@@ -171,28 +205,39 @@ export function expandSelectedIds(selectedIds) {
   return out;
 }
 
+function bundleForSkill(skillId) {
+  return BUNDLES.find((bundle) => bundle.skillIds.includes(skillId));
+}
+
 /**
- * Picker rows: one entry per bundle (if any member exists), plus each
- * non-bundled skill.
+ * Picker rows in SKILL_ORDER. Bundles replace their members at the first
+ * member's position (spec-driven context after grill-me and review-code).
  *
  * @param {Array<{ id: string, name: string, description: string }>} skills
  */
 export function pickerEntries(skills) {
   const byId = new Map(skills.map((skill) => [skill.id, skill]));
-  const bundled = bundledSkillIds();
+  const seen = new Set();
   const entries = [];
+  const leftover = skills.map((skill) => skill.id).filter((id) => !skillOrderIndex.has(id));
 
-  for (const bundle of BUNDLES) {
-    if (!bundle.skillIds.some((id) => byId.has(id))) continue;
-    entries.push({
-      value: bundle.id,
-      label: bundle.label,
-      hint: bundle.hint,
-    });
-  }
+  for (const id of [...SKILL_ORDER, ...leftover]) {
+    const bundle = bundleForSkill(id);
+    if (bundle) {
+      if (seen.has(bundle.id)) continue;
+      if (!bundle.skillIds.some((skillId) => byId.has(skillId))) continue;
+      seen.add(bundle.id);
+      entries.push({
+        value: bundle.id,
+        label: bundle.label,
+        hint: bundle.hint,
+      });
+      continue;
+    }
 
-  for (const skill of skills) {
-    if (bundled.has(skill.id)) continue;
+    const skill = byId.get(id);
+    if (!skill || seen.has(skill.id)) continue;
+    seen.add(skill.id);
     entries.push({
       value: skill.id,
       label: skill.name,
@@ -200,7 +245,6 @@ export function pickerEntries(skills) {
     });
   }
 
-  entries.sort((a, b) => a.label.localeCompare(b.label));
   return entries;
 }
 
@@ -209,15 +253,22 @@ export function pickerValuesForInstalled(installedIds) {
   const installed = new Set(installedIds);
   const values = [];
   const covered = new Set();
+  const leftover = [...installedIds].filter((id) => !skillOrderIndex.has(id));
 
-  for (const bundle of BUNDLES) {
-    if (!bundle.skillIds.some((id) => installed.has(id))) continue;
-    values.push(bundle.id);
-    for (const id of bundle.skillIds) covered.add(id);
-  }
+  for (const id of [...SKILL_ORDER, ...leftover]) {
+    const bundle = bundleForSkill(id);
+    if (bundle) {
+      if (covered.has(bundle.id)) continue;
+      if (!bundle.skillIds.some((skillId) => installed.has(skillId))) continue;
+      covered.add(bundle.id);
+      for (const skillId of bundle.skillIds) covered.add(skillId);
+      values.push(bundle.id);
+      continue;
+    }
 
-  for (const id of installedIds) {
-    if (!covered.has(id)) values.push(id);
+    if (!installed.has(id) || covered.has(id)) continue;
+    covered.add(id);
+    values.push(id);
   }
 
   return values;

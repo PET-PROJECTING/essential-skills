@@ -7,6 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  compareSkillIds,
   expandSelectedIds,
   pickerEntries,
   pickerValuesForInstalled,
@@ -234,7 +235,7 @@ function catalogLines(skills, selectedIds) {
   const byId = new Map(skills.map((skill) => [skill.id, skill]));
   return selectedIds
     .map((id) => byId.get(id) || { id, name: id, description: '' })
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => compareSkillIds(a.id, b.id))
     .map((skill) => {
       const summary = firstSentence(skill.description) || skill.name;
       return `/${skill.id} — ${truncate(summary, 88)}`;
@@ -280,7 +281,7 @@ async function installedPackSkillIds(destRoots, packIds) {
     }
   }
 
-  return [...found].sort((a, b) => a.localeCompare(b));
+  return [...found].sort(compareSkillIds);
 }
 
 function detectedAgentIds() {
@@ -312,7 +313,7 @@ async function listSkills() {
     }
   }
 
-  skills.sort((a, b) => a.name.localeCompare(b.name));
+  skills.sort((a, b) => compareSkillIds(a.id, b.id));
   return skills;
 }
 

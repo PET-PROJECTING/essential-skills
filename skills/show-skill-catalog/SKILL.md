@@ -11,25 +11,25 @@ List the skills from **this pack** and, if the user says what they are trying to
 
 | Skill | What it does |
 | --- | --- |
-| `/show-skill-catalog` | Lists this pack and routes you to the right skill |
-| `/find-skills` | Search and install skills from the open ecosystem (skills.sh) |
 | `/grill-me` | Relentless interview to sharpen a plan or design |
+| `/review-code` | Two-axis review (standards + spec) since a fixed point |
 | `/specify-context` | Bootstrap project context docs; grill one unfilled file per run |
 | `/create-feature-spec` | Grill a unit spec and update the progress tracker |
+| `/show-skill-catalog` | Lists this pack and routes you to the right skill |
+| `/find-skills` | Search and install skills from the open ecosystem (skills.sh) |
 | `/fix-tech-debt` | Find README/TODO/FIX debt markers, group by domain, pick items, grill a plan |
 | `/request-refactor-plan` | Interview, then file a GitHub issue with a tiny-commit refactor plan |
 | `/apply-solid-principles` | Apply SRP, OCP, LSP, ISP, and DIP to named or changed modules |
 | `/create-commit` | Split work into logical conventional commits (uses agent session history when available) |
-| `/apply-best-practices` | React and Next.js performance rules from Vercel |
 | `/apply-prettier` | Format files with the project's Prettier |
 | `/fix-lint` | Fix Biome or ESLint issues |
 | `/apply-style-guide` | Apply a repo style guide, or Google's if none |
-| `/write-e2e-tests` | Write e2e tests for user-provided files |
-| `/write-unit-tests` | Write unit tests for named units |
-| `/write-storybook` | Write Storybook stories for named components |
 | `/write-handoff` | Compact this conversation so the next agent can continue |
-| `/review-code` | Two-axis review (standards + spec) since a fixed point |
 | `/develop-with-tdd` | Tests first, watch them fail, then write the code |
+| `/write-unit-tests` | Write unit tests for named units |
+| `/write-e2e-tests` | Write e2e tests for user-provided files |
+| `/write-storybook` | Write Storybook stories for named components |
+| `/apply-best-practices` | React and Next.js performance rules from Vercel |
 | `/feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 frontend architecture |
 | `/use-hybrid-folder-structure` | Hybrid frontend layout: responsibility first, feature second |
 
@@ -39,10 +39,11 @@ Present this as a readable list for a human (the table is the source of truth). 
 
 If the user describes a current task, recommend from this pack only:
 
-- **What can I do / what did I install?** → `/show-skill-catalog` (this skill)
 - **Sharpen a plan, design, or idea before building** → `/grill-me`
+- **Review a branch, PR, or work since a commit** → `/review-code`
 - **Bootstrap project context docs / six-file context / AGENTS.md read block** → `/specify-context` (then `/create-feature-spec` for unit specs)
 - **Write a feature unit spec or implementation plan for a feature** → `/create-feature-spec` (runs `/specify-context` first if context is missing)
+- **What can I do / what did I install?** → `/show-skill-catalog` (this skill)
 - **Triage TODO/FIX/README tech debt and plan fixes** → `/fix-tech-debt`
 - **Plan a refactor as an RFC / GitHub issue with tiny commits** → `/request-refactor-plan`
 - **Implement, refactor, migrate, or "review and replace/improve …"** → `/grill-me` first (skip only for pure Q&A or read-only review with no follow-up work); if `/develop-with-tdd` is installed, use it next for the implementation
@@ -54,7 +55,6 @@ If the user describes a current task, recommend from this pack only:
 - **Write e2e tests (paths required)** → `/write-e2e-tests`
 - **Write unit tests** → `/write-unit-tests`
 - **Write Storybook stories** → `/write-storybook`
-- **Review a branch, PR, or work since a commit** → `/review-code`
 - **Commit the current work** → `/create-commit`
 - **Organize a frontend with FSD layers and slices** → `/feature-sliced-design`
 - **Reorganize src/ by file kind and feature** → `/use-hybrid-folder-structure`
