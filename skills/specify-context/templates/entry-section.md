@@ -11,7 +11,7 @@ Read the following files in order before implementing or making any architectura
 5. `{{CONTEXT_ROOT}}/ai-workflow-rules.md` — development workflow, scoping rules, and delivery approach
 6. `{{CONTEXT_ROOT}}/progress-tracker.md` — current phase, completed work, open questions, and next steps
 
-Start from `{{CONTEXT_ROOT}}/{{SPECS_DIR}}/00-build-plan.md`, then the unit spec for the current work.
+Start from `{{CONTEXT_ROOT}}/{{SPECS_DIR}}/build-planner.md` (overall schema for every unit), then the unit spec for the current work.
 
 Update `{{CONTEXT_ROOT}}/progress-tracker.md` after each meaningful implementation change.
 

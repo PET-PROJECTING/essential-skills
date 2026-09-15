@@ -1,8 +1,8 @@
 <!-- specify-context: unfilled -->
-# Build Plan
+# Build Planner
 
-Ordered list of feature units. Each unit becomes one spec
-file in this folder (`NN-kebab-name.md`).
+Overall schema for the project: ordered list of feature units.
+Each unit becomes one spec file in this folder (`NN-kebab-name.md`).
 
 Update this file when units are added, reordered, or specced.
 

@@ -2,7 +2,7 @@
 name: specify-context
 description: >-
   Bootstrap spec-driven project context: confirm a docs folder, copy six
-  context templates plus a build plan, merge an AGENTS.md/CLAUDE.md read
+  context templates plus a build planner, merge an AGENTS.md/CLAUDE.md read
   block, then grill and fill one unfilled file per invocation. Use when the
   user wants project context docs, a six-file context system, AGENTS.md
   application context, /specify-context, or to set up docs before feature
@@ -13,7 +13,7 @@ description: >-
 
 Set up living project context so coding agents stop guessing. **Do not implement application code.** **Do not fill more than one context file per invocation.**
 
-This skill is bundled with `/create-feature-spec`. After the build plan is filled, point the user there.
+This skill is bundled with `/create-feature-spec`. After the build planner is filled, point the user there.
 
 ## Grill protocol
 
@@ -39,7 +39,7 @@ A file is **unfilled** if it contains the HTML comment `<!-- specify-context: un
 4. `code-standards.md`
 5. `ai-workflow-rules.md`
 6. `progress-tracker.md`
-7. `{{SPECS_DIR}}/00-build-plan.md`
+7. `{{SPECS_DIR}}/build-planner.md`
 
 Templates live in this skill's `templates/` folder (next to this `SKILL.md`).
 
@@ -75,7 +75,7 @@ Then:
 
 1. Create `{{CONTEXT_ROOT}}/` and `{{CONTEXT_ROOT}}/{{SPECS_DIR}}/`.
 2. Copy **only** these templates into `{{CONTEXT_ROOT}}/`, and **only if the destination is missing**: `project-overview.md`, `architecture.md`, `ui-context.md`, `code-standards.md`, `ai-workflow-rules.md`, `progress-tracker.md`. Never overwrite a file that is already filled (no unfilled marker).
-3. Copy `templates/00-build-plan.md` to `{{CONTEXT_ROOT}}/{{SPECS_DIR}}/00-build-plan.md` if missing.
+3. Copy `templates/build-planner.md` to `{{CONTEXT_ROOT}}/{{SPECS_DIR}}/build-planner.md` if missing.
 4. Do **not** copy `entry-section.md` into the project; it is only merged into `AGENTS.md` / `CLAUDE.md`.
 5. Merge the entry section (Phase 2).
 6. Continue to Phase 3.
@@ -116,11 +116,11 @@ Tell the user the next unfilled file (or that bootstrap is done) and to run `/sp
 | `code-standards.md` | Language/framework conventions, styling, API, storage, file layout |
 | `ai-workflow-rules.md` | Imperative agent rules: scope, split, missing requirements, protected files, verify |
 | `progress-tracker.md` | Current phase/goal; seed Next Up from what you already know; leave Completed empty unless work already shipped |
-| `00-build-plan.md` | Ordered units: one visible result each, dependencies, security before features, backend before UI wiring. Spec column stays `missing` until `/create-feature-spec` |
+| `build-planner.md` | Overall schema: ordered units, one visible result each, dependencies, security before features, backend before UI wiring. Spec column stays `missing` until `/create-feature-spec` |
 
 ## Phase 4 — All filled
 
-Ask which file to **revise** (including the build plan), or offer to stop and run `/create-feature-spec`.
+Ask which file to **revise** (including the build planner), or offer to stop and run `/create-feature-spec`.
 
 ❓ **Q1** - **Next step**: Which file should we revise, or are we done with context?
 
@@ -131,7 +131,7 @@ B)
 Nothing — go write a feature spec with `/create-feature-spec` (recommended)
 
 C)
-Revise `00-build-plan.md`
+Revise `build-planner.md`
 
 If they revise, grill that file only, rewrite it, stop.
 
