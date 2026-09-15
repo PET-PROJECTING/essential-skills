@@ -19,9 +19,12 @@ This skill is bundled with `/create-feature-spec`. After the build plan is fille
 
 Search the project and home skill dirs for `grill-me/SKILL.md` (`.cursor/skills`, `.claude/skills`, `.agents/skills`, `.windsurf/skills`, and the matching global folders). If found, **read it and follow those rules in this conversation** — do not spawn a subagent.
 
+**Number every question** in each round: `❓ **Q1** - **<title>**: <body>`, then Q2, Q3, … Restart numbering at Q1 each round.
+
 If it is missing, use this format:
 
 - Design tree in **rounds**. Ask the whole frontier each round; wait for answers.
+- Number every question **Q1**, **Q2**, … as above. Never omit the number.
 - Every question needs **2–4 options labeled A) / B) / C)** (letter on its own line, option text on the next). Mark **exactly one** recommended. After the list, explain why.
 - Finding facts is your job (repo, package.json, existing docs). Do not ask what you can look up.
 - Do not write the context file until that file's frontier is empty. Then write it. Do not start the next file.
@@ -46,7 +49,7 @@ Skip this phase if an `## Application Building Context` section already exists i
 
 Otherwise grill these two questions (same round):
 
-❓ **Context root**: Where should the six context files live? Never recommend `context/` (collides with React context).
+❓ **Q1** - **Context root**: Where should the six context files live? Never recommend `context/` (collides with React context).
 
 A)
 `docs/` (recommended)
@@ -57,7 +60,7 @@ B)
 C)
 Another name the user types (not `context/`, not `src/`)
 
-❓ **Feature-spec folder**: Nested directory under that root for unit specs. Never recommend `features/` (collides with Feature-Sliced Design).
+❓ **Q2** - **Feature-spec folder**: Nested directory under that root for unit specs. Never recommend `features/` (collides with Feature-Sliced Design).
 
 A)
 `feature-specs/` (recommended)
@@ -118,6 +121,8 @@ Tell the user the next unfilled file (or that bootstrap is done) and to run `/sp
 ## Phase 4 — All filled
 
 Ask which file to **revise** (including the build plan), or offer to stop and run `/create-feature-spec`.
+
+❓ **Q1** - **Next step**: Which file should we revise, or are we done with context?
 
 A)
 Revise a named context file (grill + rewrite that file only)
