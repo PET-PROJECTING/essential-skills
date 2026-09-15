@@ -70,6 +70,8 @@ Installing every skill makes the agent heavier on implementation work. These add
 | `apply-best-practices` | Medium | 70 React/Next.js rules; can trigger broad refactors |
 | `feature-sliced-design` | Medium | Architecture migrations and layer boundaries |
 | `use-hybrid-folder-structure` | Medium | Multi-file folder refactors |
+| `specify-context` | Medium | Interview rounds to fill six context files |
+| `create-feature-spec` | Medium | Interview rounds to complete feature spec |
 
 Everything else is on-demand (commit, lint, format, handoff, catalog) and stays out of the way until invoked.
 
@@ -96,6 +98,8 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 | `apply-best-practices` | React and Next.js performance guidelines from Vercel Engineering | Full |
 | `feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 from [fsd.how](https://fsd.how) | Full |
 | `use-hybrid-folder-structure` | Hybrid frontend layout: responsibility first, feature second | Full |
+| `specify-context` | Bootstrap project AI context with Six-File Context System | Full |
+| `create-feature-spec` | Create unit feature specs under context/features/ | Full |
 
 ## License
 

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Create Feature Spec"
+  short_description: "Write a feature/unit spec"
+policy:
+  allow_implicit_invocation: true

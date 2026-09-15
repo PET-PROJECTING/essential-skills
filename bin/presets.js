@@ -83,6 +83,14 @@ export const SKILL_OVERHEAD = {
     overhead: 'low',
     reason: 'Discovery only',
   },
+  'specify-context': {
+    overhead: 'medium',
+    reason: 'Interview rounds to fill six context files',
+  },
+  'create-feature-spec': {
+    overhead: 'medium',
+    reason: 'Interview rounds to complete feature spec',
+  },
 };
 
 /** @type {Array<{ id: string, label: string, hint: string, skillIds: string[] }>} */

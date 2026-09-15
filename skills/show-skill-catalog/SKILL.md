@@ -30,6 +30,8 @@ List the skills from **this pack** and, if the user says what they are trying to
 | `/develop-with-tdd` | Tests first, watch them fail, then write the code |
 | `/feature-sliced-design` | Feature-Sliced Design (FSD) v2.1 frontend architecture |
 | `/use-hybrid-folder-structure` | Hybrid frontend layout: responsibility first, feature second |
+| `/specify-context` | Bootstrap project AI context with Six-File Context System |
+| `/create-feature-spec` | Create unit feature specs under context/features/ |
 
 Present this as a readable list for a human (the table is the source of truth). One line per skill is enough unless they ask for more.
 
@@ -38,6 +40,8 @@ Present this as a readable list for a human (the table is the source of truth). 
 If the user describes a current task, recommend from this pack only:
 
 - **What can I do / what did I install?** → `/show-skill-catalog` (this skill)
+- **Set up project AI context / Six-File Context System** → `/specify-context`
+- **Create a new feature spec / unit spec** → `/create-feature-spec`
 - **Sharpen a plan, design, or idea before building** → `/grill-me`
 - **Triage TODO/FIX/README tech debt and plan fixes** → `/fix-tech-debt`
 - **Plan a refactor as an RFC / GitHub issue with tiny commits** → `/request-refactor-plan`

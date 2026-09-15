@@ -1,0 +1,5 @@
+interface:
+  display_name: "Specify Context"
+  short_description: "Bootstrap project AI context"
+policy:
+  allow_implicit_invocation: true
