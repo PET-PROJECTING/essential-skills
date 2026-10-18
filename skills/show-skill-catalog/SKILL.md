@@ -11,7 +11,7 @@ List the skills from **this pack** and, if the user says what they are trying to
 
 | Skill | What it does |
 | --- | --- |
-| `/grill-me` | Relentless interview to sharpen a plan or design |
+| `/grill-me` | Relentless interview to sharpen a plan or design (AskQuestion when available, else chat A/B/C) |
 | `/review-code` | Two-axis review (standards + spec) since a fixed point |
 | `/specify-context` | Bootstrap project context docs; grill one unfilled file per run |
 | `/create-feature-spec` | Grill a unit spec and update the progress tracker |

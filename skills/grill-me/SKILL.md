@@ -6,7 +6,8 @@ description: >-
   swap, or "review X and replace/improve/migrate Y". Use when multiple valid
   approaches exist or scope is unclear, even if the request sounds analytical.
   Skip only for pure Q&A with no file changes, read-only review with no
-  follow-up work. When unsure, grill.
+  follow-up work. When unsure, grill. Prefer AskQuestion for choices when the
+  host provides it; fall back to plain chat A/B/C when it does not.
 ---
 
 Run a grilling session **before any non-trivial implementation**. Interview the user relentlessly until you reach a shared understanding. Do **not** start implementing in the same turn as grilling.
@@ -40,16 +41,29 @@ Map this as a **design tree**: every decision branches into the decisions that h
 
 Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round. Then wait for the user's answers before the next round.
 
+## How to ask (prefer AskQuestion)
+
+**Prefer Cursor's `AskQuestion` tool** for every grilling question when that tool is available in this session. It opens a clickable options UI so the user can select instead of typing `Q1) A`.
+
+- Use `AskQuestion` for the whole frontier in one round when the tool allows multiple questions; otherwise call it once per frontier question in the same turn.
+- Put the same content into the tool that you would put in chat: clear title/prompt, **2–4 concrete options**, mark **exactly one** as recommended (in the option label or description), and keep trade-offs visible (recommended option's why, or a short note alongside).
+- **Never** ask grilling choices as plain chat text when `AskQuestion` is available.
+- Do **not** invent or simulate a picker UI. Only the host-provided `AskQuestion` tool creates that window.
+
+**Fallback — plain chat text:** If `AskQuestion` is **not** in this session's tool list (CLI agents, Cloud Agent, other hosts, or a harness that omitted it), use the lettered markdown format under **Suggestions (always)**. Do not claim the picker is unavailable in a long apology — just use chat A/B/C. Skills that say "follow `/grill-me`" inherit this same prefer-then-fallback rule.
+
 ## Suggestions (always)
 
 Every question **must** include a few concrete suggestions (typically 2–4). Mark **exactly one** as recommended.
 
-- Label suggestions **A) / B) / C) / …** (never bullets, never 1/2/3, never `A.`).
-- Put **each option on its own block**: the letter on one line, the option text on the next. Never blend A/B/C into one paragraph or one line.
-- One option is recommended. After the list, explain **why that option is better than the others** (trade-offs, not a slogan).
+- Label suggestions **A) / B) / C) / …** (never bullets, never 1/2/3, never `A.`). For `AskQuestion`, map those letters to distinct selectable options (same order and meaning).
+- Put **each option on its own block** in chat fallback: the letter on one line, the option text on the next. Never blend A/B/C into one paragraph or one line.
+- One option is recommended. After the list (chat) or in/near the recommended option (`AskQuestion`), explain **why that option is better than the others** (trade-offs, not a slogan).
 - Do not ask an open question with no options. If the space is wide, still offer a short A/B/C set covering the real forks.
 
-Format a round like so:
+### Chat fallback format
+
+Use this only when `AskQuestion` is unavailable:
 
 ```
 ❓ **Q1** - **<question title>**: <question body>
@@ -89,6 +103,6 @@ Finding _facts_ is your job, never the user's. When a frontier question needs a 
 
 The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed.
 
-Then **write down the plan** (what you will change, and in what order). **Wait for confirmation.** Do not act on it until the user confirms.
+Then **write down the plan** (what you will change, and in what order). **Wait for confirmation.** Prefer `AskQuestion` for that confirm/deny (or proceed/adjust) when available; otherwise ask in chat. Do not act on the plan until the user confirms.
 
 If the user **mentions docs**, also create a markdown file named for the work (`<feature_name>.md`, `<fix_name>.md`, or `adjustements.md`) with that plan. Skip the file unless they ask for docs.

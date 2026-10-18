@@ -17,11 +17,12 @@ This skill is bundled with `/specify-context`.
 
 ## Grill protocol
 
-Search the project and home skill dirs for `grill-me/SKILL.md` (`.cursor/skills`, `.claude/skills`, `.agents/skills`, `.windsurf/skills`, and the matching global folders). If found, **read it and follow those rules in this conversation** — do not spawn a subagent.
+Search the project and home skill dirs for `grill-me/SKILL.md` (`.cursor/skills`, `.claude/skills`, `.agents/skills`, `.windsurf/skills`, and the matching global folders). If found, **read it and follow those rules in this conversation** — do not spawn a subagent. That includes **prefer `AskQuestion` when available**, plain chat A/B/C otherwise.
 
 If it is missing, use this format:
 
 - Design tree in **rounds**. Ask the whole frontier each round; wait for answers.
+- Prefer **`AskQuestion`** when the host provides it; otherwise use plain chat A/B/C.
 - Every question needs **2–4 options labeled A) / B) / C)** (letter on its own line, option text on the next). Mark **exactly one** recommended. After the list, explain why.
 - Finding facts is your job. Read the context files and the repo before asking.
 - Do not write the spec until the frontier is empty.

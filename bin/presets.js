@@ -29,7 +29,8 @@ export const SKILL_OVERHEAD = {
   },
   'grill-me': {
     overhead: 'medium',
-    reason: 'Interview rounds and plan confirmation before any implementation',
+    reason:
+      'Interview rounds (AskQuestion when available, else chat A/B/C) and plan confirmation before any implementation',
   },
   'specify-context': {
     overhead: 'medium',

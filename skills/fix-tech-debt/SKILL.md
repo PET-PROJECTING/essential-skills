@@ -121,6 +121,7 @@ If nothing is found, say so plainly and suggest the user may track debt in READM
 For **selected items only**, run a grilling session using the same rules as `/grill-me`:
 
 - Work a **design tree** in **rounds**; ask the whole frontier each round
+- Prefer **`AskQuestion`** for choices when available; fall back to plain chat A/B/C when it is not
 - Every question needs **2–4 labeled options (A/B/C)** with **exactly one recommended**
 - **Finding facts is your job** — explore the codebase for each selected item before asking
 - **Do not start implementing** during grilling

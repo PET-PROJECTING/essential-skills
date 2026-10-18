@@ -17,13 +17,14 @@ This skill is bundled with `/create-feature-spec`. After the build planner is fi
 
 ## Grill protocol
 
-Search the project and home skill dirs for `grill-me/SKILL.md` (`.cursor/skills`, `.claude/skills`, `.agents/skills`, `.windsurf/skills`, and the matching global folders). If found, **read it and follow those rules in this conversation** — do not spawn a subagent.
+Search the project and home skill dirs for `grill-me/SKILL.md` (`.cursor/skills`, `.claude/skills`, `.agents/skills`, `.windsurf/skills`, and the matching global folders). If found, **read it and follow those rules in this conversation** — do not spawn a subagent. That includes **prefer `AskQuestion` when available**, plain chat A/B/C otherwise.
 
-**Number every question** in each round: `❓ **Q1** - **<title>**: <body>`, then Q2, Q3, … Restart numbering at Q1 each round.
+**Number every question** in each round: `❓ **Q1** - **<title>**: <body>`, then Q2, Q3, … Restart numbering at Q1 each round. When using `AskQuestion`, keep the same Q1/Q2… titles on each prompt.
 
 If it is missing, use this format:
 
 - Design tree in **rounds**. Ask the whole frontier each round; wait for answers.
+- Prefer **`AskQuestion`** when the host provides it; otherwise use plain chat A/B/C.
 - Number every question **Q1**, **Q2**, … as above. Never omit the number.
 - Every question needs **2–4 options labeled A) / B) / C)** (letter on its own line, option text on the next). Mark **exactly one** recommended. After the list, explain why.
 - Finding facts is your job (repo, package.json, existing docs). Do not ask what you can look up.

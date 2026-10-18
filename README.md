@@ -43,7 +43,7 @@ Pick a preset during install, or choose skills manually.
 
 `grill-me`, `specify-context`, `create-feature-spec`, `show-skill-catalog`, `find-skills`, `fix-tech-debt`, `request-refactor-plan`, `apply-solid-principles`, `create-commit`, `fix-lint`, `apply-prettier`, `apply-style-guide`, `write-handoff`
 
-Keeps alignment before building (`grill-me`, spec-driven context) and a SOLID pass on demand, but skips TDD, test-writing, review, Storybook, and architecture skills so tasks resolve faster.
+Keeps alignment before building (`grill-me` with AskQuestion when the host supports it, spec-driven context) and a SOLID pass on demand, but skips TDD, test-writing, review, Storybook, and architecture skills so tasks resolve faster.
 
 ### Full preset (21 skills)
 
@@ -59,7 +59,7 @@ Installing every skill makes the agent heavier on implementation work. These add
 
 | Skill | Overhead | Why |
 | --- | --- | --- |
-| `grill-me` | Medium | Interview rounds and plan confirmation before coding |
+| `grill-me` | Medium | Interview rounds (AskQuestion when available) and plan confirmation before coding |
 | `review-code` | High | Two parallel sub-agents over the full diff |
 | `specify-context` | Medium | Interview rounds to fill project context files, one file per invocation |
 | `create-feature-spec` | Medium | Interview rounds to write a unit spec and update the progress tracker |
@@ -79,7 +79,7 @@ Everything else is on-demand (commit, lint, format, handoff, catalog) and stays 
 
 | Skill | What it does | Preset |
 | --- | --- | --- |
-| `grill-me` | Interview before implementation; skip only pure Q&A or read-only review with no follow-up | Quick, Full |
+| `grill-me` | Interview before implementation via AskQuestion when available (clickable options), else chat A/B/C; skip only pure Q&A or read-only review with no follow-up | Quick, Full |
 | `review-code` | Two-axis review of changes against repo standards and the spec | Full |
 | `specify-context` | Bootstrap docs context files, merge AGENTS.md/CLAUDE.md, grill one unfilled file per run | Quick, Full |
 | `create-feature-spec` | Grill a unit spec under feature-specs and update the progress tracker (installs with specify-context) | Quick, Full |
